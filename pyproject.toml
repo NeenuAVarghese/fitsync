@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "fitsync"
+version = "0.1.0"
+description = ""
+license = "MIT"
+authors = ["Neenu Ann Varghese <neenuavarghese@gmail.com>", "Douglas William Thrift <douglaswth@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.101.0"
+psycopg2 = "^2.9.7"
+passlib = "^1.7.4"
+uvicorn = "^0.23.2"
+pyjwt = "^2.8.0"
+python-decouple = "^3.8"
+python-multipart = "^0.0.6"
+bcrypt = "^4.0.1"
+
+[tool.poetry.scripts]
+generate_password = "generate_password:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

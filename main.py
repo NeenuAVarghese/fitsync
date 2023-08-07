@@ -1,7 +1,7 @@
-import postgres
+import jwt
+from clients import postgres
 from typing import Annotated
 from datetime import datetime, timedelta
-from jose import JWTError, jwt
 from passlib.context import CryptContext
 from decouple import config
 from fastapi import FastAPI, Depends, HTTPException, status
@@ -23,10 +23,7 @@ def create_access_token(username: str) -> str:
         "exp": datetime.utcnow() + timedelta(minutes=15),
         "sub": username,
     }
-    encoded_jwt = jwt.encode(
-        to_encode,
-        JWT_SECRET_KEY,
-    )
+    encoded_jwt = jwt.encode(to_encode, JWT_SECRET_KEY, algorithm="HS256")
     return encoded_jwt
 
 
@@ -44,9 +41,10 @@ def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Annotated[postgres.ConnectionClient, Depends(dbClient)],
 ):
-    if not authenticate_user(db, form_data.username, form_data.password):
+    user = authenticate_user(db, form_data.username, form_data.password)
+    if not user:
         raise HTTPException(
             status_code=status.HTTP_401_unauthorized,
             detail="Incorrect username or password",
         )
-    return {"access_token": create_access_token, "token_type": "bearer"}
+    return {"access_token": create_access_token(user), "token_type": "bearer"}
