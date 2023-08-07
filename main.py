@@ -11,7 +11,7 @@ app = FastAPI()
 
 # Initialize Security
 passwordContext = CryptContext(schemes=["bcrypt"], deprecated="auto")
-JWT_SECRET_KEY = config("JWT_SECRET")
+JWT_SECRET = config("JWT_SECRET")
 
 # Initialize Clients
 # 1. Database connection
@@ -23,7 +23,7 @@ def create_access_token(username: str) -> str:
         "exp": datetime.utcnow() + timedelta(minutes=15),
         "sub": username,
     }
-    encoded_jwt = jwt.encode(to_encode, JWT_SECRET_KEY, algorithm="HS256")
+    encoded_jwt = jwt.encode(to_encode, JWT_SECRET, algorithm="HS256")
     return encoded_jwt
 
 
